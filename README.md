@@ -1,4 +1,4 @@
-# 🔍 Trust by Design
+# Trust by Design
 ### Cross-Platform Content Intelligence Tool
 *Human-Centered Data Science — Final Project*
 *Akanksha Bharambe & Rohit Yadav — UIUC*
@@ -20,7 +20,7 @@ audience expectations, and content framing.
 
 ## Live Demo
 
-👉 [Launch the app](your-huggingface-link-here)
+ [Launch the app](your-huggingface-link-here)
 
 ---
 
