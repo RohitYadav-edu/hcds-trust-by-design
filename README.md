@@ -1,3 +1,12 @@
+---
+title: Trust by Design
+emoji: 🔍
+colorFrom: yellow
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # Trust by Design
 ### Cross-Platform Content Intelligence Tool
 *Human-Centered Data Science — Final Project*
