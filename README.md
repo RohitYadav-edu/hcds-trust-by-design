@@ -66,34 +66,36 @@ Three separate Gradient Boosting Classifiers trained per platform:
 
 ## Project Structure
 
+```text
 trust-by-design/
-│
-├── app.py                          
-├── inference.py                    
-├── trust_score.py                  
-├── requirements.txt                
-├── README.md                       
+├── app.py                  — Streamlit UI
+├── inference.py            — ML prediction logic
+├── trust_score.py          — Credibility scoring engine
+├── requirements.txt
+├── README.md
 │
 ├── models/
-│   ├── facebook_model.pkl          
-│   ├── linkedin_model.pkl          
-│   ├── googleplus_model.pkl        
-│   ├── tfidf_vectorizer.pkl        
-│   └── model_meta.pkl              
+│   ├── facebook_model.pkl
+│   ├── linkedin_model.pkl
+│   ├── googleplus_model.pkl
+│   ├── tfidf_vectorizer.pkl
+│   └── model_meta.pkl
 │
 ├── notebooks/
-│   └── EDA_and_Training.ipynb      
+│   └── EDA_and_Training.ipynb
 │
 ├── data/
-│   └── .gitkeep                    
-│                   
+│   └── .gitkeep
 │
-└── documentation/
-    ├── EDA_and_Training.ipynb.pdf
-    ├── Project Abstract.pdf
-    ├── Project Proposal.pdf
+├── documentation/
+│   ├── EDA_and_Training.ipynb.pdf
+│   ├── Project Abstract.pdf
+│   └── Project Proposal.pdf
+│
+└── presentation/
     ├── Trust_by_Design_Group_2.pptx
-    └── Trust by Design Midterm Project Report.pdf  
+    └── Trust by Design Midterm Project Report.pdf
+```  
 
 ---
 
