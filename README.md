@@ -21,7 +21,7 @@ audience expectations, and content framing.
 
 ## Live Demo
 
- [Launch the app](your-huggingface-link-here)
+ [Launch the app](https://huggingface.co/spaces/Rohit117Y/trust-by-design)
 
 ---
 
