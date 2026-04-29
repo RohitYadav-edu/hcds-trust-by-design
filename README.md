@@ -1,19 +1,19 @@
 # Trust by Design
 ### Cross-Platform Content Intelligence Tool
-*Human-Centered Data Science — Final Project*
-*Akanksha Bharambe & Rohit Yadav — UIUC*
+Human-Centered Data Science Final Project
+Akanksha Bharambe & Rohit Yadav
 
 ---
 
 ## Overview
 
 Trust by Design is an AI-powered tool that predicts how a news headline
-will perform across Facebook, LinkedIn, and Google+ — and evaluates its
+will perform across Facebook, LinkedIn, and Google+, and evaluates its
 credibility score.
 
 Built on 93,000+ real news articles from the UCI News Popularity Dataset,
 the system uses platform-specific machine learning models to show that
-content success is not universal — it depends on platform culture,
+content success is not universal, it depends on platform culture,
 audience expectations, and content framing.
 
 ---
