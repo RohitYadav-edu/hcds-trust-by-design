@@ -1,6 +1,7 @@
 # Trust by Design
 ### Cross-Platform Content Intelligence Tool
 Human-Centered Data Science Final Project
+
 Akanksha Bharambe & Rohit Yadav
 
 ---
