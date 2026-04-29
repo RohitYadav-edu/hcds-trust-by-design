@@ -17,7 +17,14 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stApp { background-color: #0d1b2a; }
-    .block-container { padding-top: 2rem; padding-bottom: 2rem; }
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
     h1, h2, h3, .stMarkdown p { color: #f5f0e8; }
     .stTextInput > div > div > input,
     .stTextArea > div > div > textarea,
@@ -67,9 +74,33 @@ st.markdown("""
     .stWarning { background-color: #2e2a1a !important; color: #e8c96d !important; border: 1px solid #c9a84c !important; }
     .stCaption { color: #c9a84c !important; }
     label { color: #a89070 !important; }
-    .stTabs [data-baseweb="tab-list"] { background-color: #1b2d3e; border-radius: 10px; padding: 4px; }
-    .stTabs [data-baseweb="tab"] { color: #a89070; border-radius: 8px; }
-    .stTabs [aria-selected="true"] { background-color: #c9a84c !important; color: #0d1b2a !important; font-weight: 600; }
+
+    /* Centered and styled tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: #1b2d3e;
+        border-radius: 12px;
+        padding: 4px;
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    .stTabs [data-baseweb="tab"] {
+        color: #a89070;
+        border-radius: 8px;
+        padding: 0.5rem 1.5rem;
+        font-size: 15px;
+        font-weight: 500;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #c9a84c !important;
+        color: #0d1b2a !important;
+        font-weight: 600;
+    }
+    .stTabs [data-baseweb="tab-panel"] {
+        padding-top: 1.5rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -87,7 +118,6 @@ def load_dataset():
     df['text']     = df['Title'] + ' ' + df['Headline']
     df = df[~((df['Facebook'] == -1) & (df['GooglePlus'] == -1) & (df['LinkedIn'] == -1))]
 
-    # Compute trust score for each row
     def quick_trust(row):
         title = str(row['Title'])
         caps_ratio = sum(1 for c in title if c.isupper()) / max(len(title), 1)
@@ -110,7 +140,6 @@ def load_dataset():
 
     df['trust_score'] = df.apply(quick_trust, axis=1)
 
-    # Virality labels per platform
     for col in ['Facebook', 'LinkedIn', 'GooglePlus']:
         valid = df[df[col] >= 0][col]
         thresh = np.percentile(valid, 75)
@@ -125,10 +154,10 @@ artifacts = get_artifacts()
 meta      = artifacts['meta']
 
 TOPIC_LABELS = {
-    'obama':     'Obama / Politics',
+    'obama':     'Politics',
     'economy':   'Economy',
-    'microsoft': 'Microsoft / Technology',
-    'palestine': 'Palestine / Conflict'
+    'microsoft': 'Technology',
+    'palestine': 'Conflict'
 }
 
 PLOT_THEME = {
@@ -250,7 +279,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 ])
 
 # ══════════════════════════════════════════════════════════════════════════════
-# TAB 1 — Predict & Analyze (existing app)
+# TAB 1 — Predict & Analyze
 # ══════════════════════════════════════════════════════════════════════════════
 with tab1:
     st.markdown("#### Enter Your Content")
@@ -293,7 +322,7 @@ with tab1:
 
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric(" Facebook", f"{scores['facebook']}%")
+                st.metric("ⓕ Facebook", f"{scores['facebook']}%")
                 st.progress(scores['facebook'] / 100)
             with col2:
                 st.metric("[in] LinkedIn", f"{scores['linkedin']}%")
@@ -343,7 +372,7 @@ with tab1:
             with s1:
                 st.metric("Headline Sentiment", sentiment_label(sentiment_title))
             with s2:
-                st.metric("Summary Sentiment",  sentiment_label(sentiment_headline))
+                st.metric("Summary Sentiment", sentiment_label(sentiment_headline))
 
             st.divider()
 
@@ -396,16 +425,14 @@ with tab2:
         topic_key = [k for k, v in TOPIC_LABELS.items() if v == topic_filter][0]
         plot_df   = plot_df[plot_df['Topic'] == topic_key]
 
-    # Sample for performance
     if len(plot_df) > 3000:
         plot_df = plot_df.sample(3000, random_state=42)
 
-    # Quadrant labels
-    median_trust   = plot_df['trust_score'].median()
+    median_trust    = plot_df['trust_score'].median()
     median_virality = plot_df[f'{col}_score'].median()
 
     def quadrant_label(row):
-        high_trust   = row['trust_score']    >= median_trust
+        high_trust    = row['trust_score']   >= median_trust
         high_virality = row[f'{col}_score'] >= median_virality
         if high_trust and high_virality:     return "Ideal — Credible & Viral"
         if not high_trust and high_virality: return "Viral but Low Credibility"
@@ -429,9 +456,9 @@ with tab2:
         color_discrete_map=color_map_q,
         hover_data=['Title', 'Topic'],
         labels={
-            'trust_score':      'Credibility Score',
-            f'{col}_score':     f'{platform_choice} Virality Score',
-            'quadrant':         'Content Quadrant'
+            'trust_score':   'Credibility Score',
+            f'{col}_score':  f'{platform_choice} Virality Score',
+            'quadrant':      'Content Quadrant'
         },
         title=f'Trust vs Virality — {platform_choice}'
     )
@@ -451,7 +478,6 @@ with tab2:
 
     st.plotly_chart(fig, use_container_width=True)
 
-    # Quadrant summary
     st.markdown("### Quadrant Breakdown")
     q_counts = plot_df['quadrant'].value_counts()
     q_col1, q_col2, q_col3, q_col4 = st.columns(4)
@@ -495,7 +521,6 @@ with tab3:
     topic_key = [k for k, v in TOPIC_LABELS.items() if v == bias_topic][0]
     topic_df  = df[df['Topic'] == topic_key].copy()
 
-    # Average virality score per platform
     fb_avg = topic_df[topic_df['Facebook'] >= 0]['Facebook_score'].mean()
     li_avg = topic_df[topic_df['LinkedIn'] >= 0]['LinkedIn_score'].mean()
     gp_avg = topic_df[topic_df['GooglePlus'] >= 0]['GooglePlus_score'].mean()
@@ -523,7 +548,6 @@ with tab3:
     )
     st.plotly_chart(bar_fig, use_container_width=True)
 
-    # Sentiment vs virality per platform
     st.markdown("#### Sentiment Distribution by Platform Performance")
     st.caption("Do high-performing articles on each platform share a common sentiment pattern?")
 
@@ -562,7 +586,6 @@ with tab3:
 
     st.divider()
 
-    # Topic comparison across all platforms
     st.markdown("#### Topic Performance Heatmap")
     st.caption("Which topics get the most traction on which platforms?")
 
@@ -570,10 +593,10 @@ with tab3:
     for t_key, t_label in TOPIC_LABELS.items():
         t_df = df[df['Topic'] == t_key]
         heatmap_data.append({
-            'Topic':     t_label,
-            'Facebook':  t_df[t_df['Facebook'] >= 0]['Facebook_score'].mean(),
-            'LinkedIn':  t_df[t_df['LinkedIn'] >= 0]['LinkedIn_score'].mean(),
-            'Google+':   t_df[t_df['GooglePlus'] >= 0]['GooglePlus_score'].mean(),
+            'Topic':    t_label,
+            'Facebook': t_df[t_df['Facebook'] >= 0]['Facebook_score'].mean(),
+            'LinkedIn': t_df[t_df['LinkedIn'] >= 0]['LinkedIn_score'].mean(),
+            'Google+':  t_df[t_df['GooglePlus'] >= 0]['GooglePlus_score'].mean(),
         })
 
     heatmap_df = pd.DataFrame(heatmap_data).set_index('Topic')
@@ -627,14 +650,13 @@ with tab4:
         if not audit_title.strip():
             st.error("Please paste a headline to audit.")
         else:
-            audit_text = audit_body.strip() if audit_body.strip() else audit_title
-            trust      = compute_trust_score(audit_title, audit_text)
-            sentiment  = TextBlob(audit_title).sentiment.polarity
+            audit_text   = audit_body.strip() if audit_body.strip() else audit_title
+            trust        = compute_trust_score(audit_title, audit_text)
+            sentiment    = TextBlob(audit_title).sentiment.polarity
             subjectivity = TextBlob(audit_title).sentiment.subjectivity
 
             st.divider()
 
-            # Overall verdict
             if trust['score'] >= 70:
                 st.success(f"**Verdict: Likely Credible** — Trust score {trust['score']}/100")
             elif trust['score'] >= 45:
@@ -644,19 +666,16 @@ with tab4:
 
             st.divider()
 
-            # Detailed scores
             st.markdown("### Signal Analysis")
             a1, a2, a3 = st.columns(3)
 
             with a1:
                 st.metric("Credibility Score", f"{trust['score']}/100")
                 st.progress(trust['score'] / 100)
-
             with a2:
                 sent_str = "Positive" if sentiment > 0.05 else "Negative" if sentiment < -0.05 else "Neutral"
                 st.metric("Sentiment", f"{sent_str} ({sentiment:.3f})")
                 st.progress(abs(sentiment))
-
             with a3:
                 subj_label = "High" if subjectivity > 0.5 else "Low"
                 st.metric("Subjectivity", f"{subj_label} ({subjectivity:.3f})")
@@ -664,7 +683,6 @@ with tab4:
 
             st.divider()
 
-            # Manipulation risk
             st.markdown("### Manipulation Risk Indicators")
 
             risk_score = 0
@@ -716,7 +734,6 @@ with tab4:
                         st.markdown(f"<span style='color:#e07070'>⚠ {r}</span>", unsafe_allow_html=True)
                 else:
                     st.markdown("<span style='color:#a8d5a2'>No manipulation signals detected</span>", unsafe_allow_html=True)
-
             with r2:
                 st.markdown("**Credibility signals found:**")
                 for s in safe:
@@ -726,7 +743,6 @@ with tab4:
 
             st.divider()
 
-            # Platform optimization guess
             st.markdown("### Platform Optimization Detection")
             st.caption("Based on its linguistic signals, this headline appears optimized for:")
 
