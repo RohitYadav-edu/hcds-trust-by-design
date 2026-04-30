@@ -301,7 +301,7 @@ with tab1:
 
     st.divider()
 
-    if st.button("🚀 Analyze Content", key="analyze"):
+    if st.button("Analyze Content", key="analyze"):
         if not title.strip():
             st.error("Please enter a headline to analyze.")
         else:
@@ -317,7 +317,7 @@ with tab1:
             st.success("✅ Analysis complete!")
             st.divider()
 
-            st.markdown("### 📊 Platform Virality Probability")
+            st.markdown("### Platform Virality Probability")
             st.caption("Likelihood this content reaches top 25% engagement on each platform")
 
             col1, col2, col3 = st.columns(3)
@@ -340,7 +340,7 @@ with tab1:
                 'googleplus': '𝐆 Google+'
             }
 
-            st.markdown("### 🏆 Best Platform Recommendation")
+            st.markdown("### Best Platform Recommendation")
             st.success(f"**{platform_labels[best]}** — highest predicted engagement at **{scores[best]}%**")
             st.markdown("**Why this platform?**")
             for r in explain_platform(best, title, topic, sentiment_title, scores):
@@ -348,7 +348,7 @@ with tab1:
 
             st.divider()
 
-            st.markdown("### 🛡️ Credibility Score")
+            st.markdown("### Credibility Score")
             trust_col1, trust_col2 = st.columns([1, 2])
             with trust_col1:
                 color_map = {'High': '🟢', 'Medium': '🟡', 'Low': '🔴'}
@@ -367,7 +367,7 @@ with tab1:
 
             st.divider()
 
-            st.markdown("### 🎭 Detected Sentiment")
+            st.markdown("### Detected Sentiment")
             s1, s2 = st.columns(2)
             with s1:
                 st.metric("Headline Sentiment", sentiment_label(sentiment_title))
@@ -376,14 +376,14 @@ with tab1:
 
             st.divider()
 
-            st.markdown("### ✏️ Headline Optimization Tips")
+            st.markdown("### Headline Optimization Tips")
             with st.expander("ⓕ Optimize for Facebook"):
                 for t in get_optimization_tips('facebook', title, topic, sentiment_title, trust):
                     st.markdown(f"- {t}")
             with st.expander("[in] Optimize for LinkedIn"):
                 for t in get_optimization_tips('linkedin', title, topic, sentiment_title, trust):
                     st.markdown(f"- {t}")
-            with st.expander("🛡️ Optimize for Credibility"):
+            with st.expander("Optimize for Credibility"):
                 st.markdown(
                     "- Avoid ALL CAPS, excessive punctuation, and clickbait phrases\n"
                     "- Use colon structure — e.g. 'Topic: Key Finding'\n"
